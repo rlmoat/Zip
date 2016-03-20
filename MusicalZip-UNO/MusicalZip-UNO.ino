@@ -1,8 +1,11 @@
-/*
+/***********
+ MUSICAL ZIP-UNO
  Plays a pitch that changes based on a variable resistor zip input!
- 2 to G
- */
+ ***********/
 
+ /*Borrows from   http://www.arduino.cc/en/Tutorial/Smoothing 
+ by David A. Mellis & Tom Igoe
+ */
 
 /* Define the number of samples to track.
 High numbers = smoother reading but will take longer to respond to input!
@@ -10,12 +13,12 @@ Use a constant rather than a normal variable to allow this
 value to determine the size of the readings array.
 */
 
-/*
-Zip Constants - set for v1 - will need calibration!
-*/
+
+// Zip Constants - set for v1 - will need calibration!
+
 
 const int maximumReading = 890; // pick a value slightly lower than the true max to calm!
-const int minimumReading = 280; // minimumReading is for the last stable value // was 380
+const int minimumReading = 280; // minimumReading is for the last stable value
 const int minimumSwoop = 20; // lower value gives comic sweep at the top!
 
 const int minimumPitch = 440; // 440Hz == A4
@@ -39,7 +42,7 @@ int movementThreshold = 4;
 
 bool calibration = true;
 int prelimCycles = 0; // keeps track of inital sensor readings during calibration
-
+const int calibrationLength = 30; // 30 is an arbitary number for sensor calming!
 
 const int zipPin = A0;
 const int speakerPin = 10;
@@ -73,7 +76,7 @@ void smoothing()
   digitalWrite(GND_emul, LOW); 
   // read from the sensor:
   readings[readIndex] = analogRead(zipPin);
-  // diconnect the emulated GND:
+  // disconnect the emulated GND:
   pinMode(GND_emul, INPUT);
   
   // add the reading to the total:
@@ -98,7 +101,7 @@ void zippyMusic(){
     // if the zip is between min and max (note use of minimumSwoop not minimumPitch
     // for comic effect!)
 
-    // map the analog input range (current range 380 - 933 from the zip)
+    // map the analog input range
     // to the output pitch range (440-880Hz)
     int thisPitch = map(average, minimumSwoop, maximumReading, maximumPitch, minimumPitch);
 
@@ -148,7 +151,7 @@ int zipMovementDetected() {
 
 void calibrate() {
   delay(100);
-  while (calibration && prelimCycles < 30) { // 30 is an arbitary number for sensor calming!
+  while (calibration && prelimCycles < calibrationLength) { 
     smoothing();
     averageChecker();
   }
@@ -166,6 +169,7 @@ void arraySet() {
   }
 }
 
+// NOT IN USE
 void movementThresholdAdjuster() {
   if (average > 800) movementThreshold = 4;
   if (average > minimumReading && average < 800) movementThreshold = 3;
