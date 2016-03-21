@@ -49,6 +49,9 @@ const int speakerPin = 10;
 const int GND_emul = 2; // emulates ground for the voltage divider
 
 void setup() {
+  
+  pinMode(zipPin, INPUT);
+  pinMode(speakerPin, OUTPUT);
   // initialize serial communications (for debugging only):
   Serial.begin(9600);
   arraySet(); // set length of readings[] and avgAvg[]
@@ -93,7 +96,7 @@ void smoothing()
   // calculate the average:
   average = total / numReadings;
 
-  //movementThresholdAdjuster();
+
 }
 
 void zippyMusic(){
@@ -169,8 +172,4 @@ void arraySet() {
   }
 }
 
-// NOT IN USE
-void movementThresholdAdjuster() {
-  if (average > 800) movementThreshold = 4;
-  if (average > minimumReading && average < 800) movementThreshold = 3;
-}
+
