@@ -67,7 +67,6 @@ void loop() {
   if (zipMovementDetected()) {
     zippyMusic();
   }
- delay(15);
 }
 
 void smoothing()
